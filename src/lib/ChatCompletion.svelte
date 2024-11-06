@@ -1,16 +1,15 @@
 <script lang="ts">
 
+    // mount get fired an executed, each time the component is instantiated
     import { onMount } from 'svelte';
 
     // export let promptMsg: string;
     // export let models:    string[];
 
-
     // let props = $props();
     // let { promptMsg , models } = $props() ;
 
-
-    // defaults
+    // defaults for property values upon instantiation
     let df1 : string = `Who was Sheakespeare?
             Was he a noble man from the court?
             Use the following json format for your response:
@@ -29,29 +28,32 @@
     if (false){
         // interface PropTypes {
         //     promptMsg: string;
-        //     models:    string[]; 
-        // }		
+        //     models:    string[];
+        // }
+        // 
         // let { promptMsg=df1 , models=df2 } = $props() as PropTypes;
+        // this way of settting types lead to syntax errors in App.svelte
     }
 
-    // syntax for a single property - with typing
+    // syntax for a single property - with type
     // let { promptMsg }: { promptMsg: string } = $props();
 
+    // two properties - destructured - typed
     let { promptMsg=df1 , models=df2 } : { promptMsg: string, models: string[]  }  = $props() ;
 
 
-
+    // a config setting
     const endPoint = `http://localhost:8001/chat-completion-json`;
 
 
-
+    // prepare  requests
     type requestT = {
         model:  string;
         prompt: string;
         role:   string;
     };
-
     let requests: requestT[] = [];
+
 
     models.forEach(mdl => {
         requests.push({
@@ -62,7 +64,7 @@
     });
 
 
-
+    // prepare  response
     type responseInnerT = {
         agreement:         string;
         alignment:         number;
@@ -94,8 +96,11 @@
 
     // let results :responseOuterT[] = [];
     let results :responseOuterT[] = $state([]);
-
-    // results.push(dummyRespOuter("id-22"))
+    
+    let initRes = () => {
+        results.push(dummyRespOuter("id-22"))
+    } 
+    initRes();
 
 
     // fetch data for a single model
